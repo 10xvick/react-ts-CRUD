@@ -11,7 +11,7 @@ export default function App() {
   let [nameref, ageref, idref] = [
     React.useRef(),
     React.useRef(),
-    React.createRef(),
+    React.useRef(),
   ];
 
   return (
@@ -34,7 +34,7 @@ export default function App() {
             <td>delete</td>
           </tr>
           {list.map((e, i) => (
-            <tr key={e.name}>
+            <tr key={e.id}>
               <td>{e.id}</td>
               <td>{e.name}</td>
               <td>{e.age}</td>
@@ -67,6 +67,11 @@ export default function App() {
 }
 
 function Editor({ setList, nameref, ageref, idref }) {
+  function clear() {
+    idref.current = undefined;
+    nameref.current.value = '';
+    ageref.current.value = '';
+  }
   return (
     <div>
       name:
@@ -76,27 +81,29 @@ function Editor({ setList, nameref, ageref, idref }) {
       <button
         onClick={() => {
           setList((list) => {
-            if (idref != undefined) {
+            const name = nameref.current.value;
+            const age = ageref.current.value;
+            if (idref.current != undefined) {
               list.some((item) => {
                 if (item.id == idref.current) {
-                  item.name = nameref.current.value;
-                  item.age = ageref.current.value;
+                  item.name = name;
+                  item.age = age;
                   return true;
                 }
               });
-              idref.current = undefined;
-              nameref.current.value = '';
-              ageref.current.value = '';
+              clear();
               return [...list];
-            } else
+            } else {
+              clear();
               return [
                 ...list,
                 {
                   id: list.at(-1).id + 1,
-                  name: nameref.current.value,
-                  age: ageref.current.value,
+                  name: name,
+                  age: age,
                 },
               ];
+            }
           });
         }}
       >
