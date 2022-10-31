@@ -98,7 +98,7 @@ function Editor({ setList, nameref, ageref, idref }) {
               return [
                 ...list,
                 {
-                  id: list.at(-1).id + 1,
+                  id: list.at(-1)?.id || 0 + 1,
                   name: name,
                   age: age,
                 },
